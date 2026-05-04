@@ -13,12 +13,12 @@ return new class extends Migration {
         Schema::create('attendances', function (Blueprint $table) {
 
             $table->id('attendance_id');
-
+            $table->unique(['schedule_id', 'enrollment_id']);
             $table->unsignedBigInteger('schedule_id');
             $table->unsignedBigInteger('enrollment_id');
             $table->foreign('schedule_id')->references('schedule_id')->on('schedules')->onDelete('cascade');
             $table->foreign('enrollment_id')->references('enrollment_id')->on('enrollments')->onDelete('cascade');
-            $table->string('attendance', 20);
+            $table->enum('attendance', ['present', 'absent', 'late']);
             $table->timestamps();
         });
     }

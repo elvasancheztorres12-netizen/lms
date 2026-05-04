@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('progress', function (Blueprint $table) {
 
             $table->id('progress_id');
+            $table->unique(['enrollment_id', 'content_id']);
             $table->unsignedBigInteger('enrollment_id');
             $table->unsignedBigInteger('content_id');
             $table->foreign('enrollment_id')->references('enrollment_id')->on('enrollments')->onDelete('cascade');

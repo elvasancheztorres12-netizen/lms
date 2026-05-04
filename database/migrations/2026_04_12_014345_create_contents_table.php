@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('description')->nullable();
             $table->string('title', 150);
             $table->string('type', 50);
-            $table->integer('order');
+            $table->integer('order_index');
             $table->timestamps();
         });
     }

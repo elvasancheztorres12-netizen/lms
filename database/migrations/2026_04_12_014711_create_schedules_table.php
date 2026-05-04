@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->foreign('training_id')->references('training_id')->on('trainings')->onDelete('cascade');
             $table->date('date');
             $table->time('start_time');
+            $table->time('end_time');
             $table->timestamps();
         });
     }

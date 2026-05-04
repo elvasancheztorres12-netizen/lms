@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->foreign('assessment_id')->references('assessment_id')->on('assessments')->onDelete('cascade');
             $table->text('question_text');
             $table->integer('score');
-            $table->integer('order');
+            $table->integer('order_index');
             $table->timestamps();
         });
     }

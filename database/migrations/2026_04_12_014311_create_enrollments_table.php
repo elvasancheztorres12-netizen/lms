@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('enrollments', function (Blueprint $table) {
 
             $table->id('enrollment_id');
+            $table->unique(['training_id', 'student_id']);
             $table->unsignedBigInteger('training_id');
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('administrator_id');
@@ -20,7 +21,7 @@ return new class extends Migration {
             $table->foreign('student_id')->references('user_id')->on('users')->onDelete('restrict');
             $table->foreign('administrator_id')->references('user_id')->on('users')->onDelete('restrict');
             $table->date('enrollment_date');
-            $table->string('scholarship_percentage', 5)->nullable();
+            $table->decimal('scholarship_percentage', 5, 2)->nullable();
             $table->char('status', 1)->default('A');
             $table->timestamps();
         });

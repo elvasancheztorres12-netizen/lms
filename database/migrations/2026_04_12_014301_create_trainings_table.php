@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->foreign('course_id')->references('course_id')->on('courses')->onDelete('cascade');
             $table->foreign('teacher_id')->references('user_id')->on('users')->onDelete('restrict');
             $table->foreign('administrator_id')->references('user_id')->on('users')->onDelete('restrict');
-            $table->string('modality', 50);
+            $table->enum('modality', ['virtual', 'presential', 'hybrid']);
             $table->decimal('price', 10, 2);
             $table->date('creation_date');
             $table->char('status', 1)->default('A');
