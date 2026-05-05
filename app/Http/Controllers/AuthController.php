@@ -25,9 +25,19 @@ class AuthController extends Controller
                 'password' => $request->password
             ])
         ) {
+
             $request->session()->regenerate();
 
-            return redirect()->route('dashboard.teacher');
+            $user = Auth::user();
+            $role = optional($user->roles->first())->name;
+
+            if ($role === 'Administrator') {
+                return redirect()->route('dashboard.admin');
+            } elseif ($role === 'Teacher') {
+                return redirect()->route('dashboard.teacher');
+            } else {
+                return redirect()->route('dashboard.student');
+            }
         }
 
         return back()->withErrors([

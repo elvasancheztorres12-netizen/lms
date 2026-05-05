@@ -13,27 +13,27 @@ class AttendancesSeeder extends Seeder
             [
                 'schedule_id' => 1,
                 'enrollment_id' => 1,
-                'attendance' => 'Present'
+                'attendance' => 'present'
             ],
             [
                 'schedule_id' => 2,
                 'enrollment_id' => 2,
-                'attendance' => 'Present'
+                'attendance' => 'present'
             ],
             [
                 'schedule_id' => 3,
                 'enrollment_id' => 3,
-                'attendance' => 'Late'
+                'attendance' => 'late'
             ],
             [
                 'schedule_id' => 4,
                 'enrollment_id' => 4,
-                'attendance' => 'Absent'
+                'attendance' => 'absent'
             ],
             [
                 'schedule_id' => 5,
                 'enrollment_id' => 5,
-                'attendance' => 'Present'
+                'attendance' => 'present'
             ]
         ]);
     }

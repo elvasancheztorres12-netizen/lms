@@ -8,8 +8,6 @@ class Training extends Model
 {
     protected $primaryKey = 'training_id';
 
-    public $timestamps = false;
-
     protected $fillable = [
         'course_id',
         'teacher_id',

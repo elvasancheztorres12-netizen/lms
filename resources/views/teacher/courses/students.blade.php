@@ -15,10 +15,15 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($students as $student)
+                @forelse ($students as $enrollment)
                     <tr>
-                        <td>{{ $student->name }}</td>
-                        <td>{{ $student->email }}</td>
+                        <td>
+                            {{ $enrollment->student->person->first_names }}
+                            {{ $enrollment->student->person->last_names }}
+                        </td>
+                        <td>
+                            {{ $enrollment->student->person->email }}
+                        </td>
                     </tr>
                 @empty
                     <tr>

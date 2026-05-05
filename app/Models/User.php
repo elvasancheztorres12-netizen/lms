@@ -8,8 +8,6 @@ class User extends Authenticatable
 {
     protected $primaryKey = 'user_id';
 
-    public $timestamps = false;
-
     protected $fillable = [
         'person_id',
         'username',
@@ -38,7 +36,7 @@ class User extends Authenticatable
 
     public function enrollments()
     {
-        return $this->hasMany(Enrollment::class, 'user_id', 'user_id');
+        return $this->hasMany(Enrollment::class, 'student_id', 'user_id');
     }
 
     public function getAuthPassword()

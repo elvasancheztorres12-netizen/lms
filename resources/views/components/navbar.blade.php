@@ -3,7 +3,7 @@
 
         @php
             $user = auth()->user();
-            $role = $user->roles->first()->name ?? null;
+            $role = optional($user->roles->first())->name;
         @endphp
 
         <div class="d-flex align-items-center">

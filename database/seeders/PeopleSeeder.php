@@ -25,7 +25,7 @@ class PeopleSeeder extends Seeder
             ],
             [
                 'last_names' => 'Lopez Ramirez',
-                'first_namess' => 'Maria Elena',
+                'first_names' => 'Maria Elena',
                 'document_type' => 'DNI',
                 'document_number' => '87654321',
                 'phone' => '912345678',
@@ -38,7 +38,7 @@ class PeopleSeeder extends Seeder
             ],
             [
                 'last_names' => 'Torres Diaz',
-                'first_namess' => 'Luis Alberto',
+                'first_names' => 'Luis Alberto',
                 'document_type' => 'DNI',
                 'document_number' => '45678912',
                 'phone' => '998877665',
@@ -51,7 +51,7 @@ class PeopleSeeder extends Seeder
             ],
             [
                 'last_names' => 'Rojas Castillo',
-                'first_namess' => 'Ana Lucia',
+                'first_names' => 'Ana Lucia',
                 'document_type' => 'DNI',
                 'document_number' => '74125896',
                 'phone' => '955443322',
