@@ -6,7 +6,7 @@ use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
-
+use App\Http\Controllers\Admin\CourseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +26,6 @@ Route::middleware(['auth', 'role:Administrator'])->group(function () {
 
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
         ->name('dashboard.admin');
-
 });
 
 /*
@@ -55,5 +54,34 @@ Route::middleware(['auth', 'role:Student'])->group(function () {
 
     Route::get('/student/dashboard', [StudentController::class, 'dashboard'])
         ->name('dashboard.student');
-
 });
+
+/*
+|--------------------------------------------------------------------------
+| TEACHER TRAINING MANAGEMENT
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'role:Administrator'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/courses', [CourseController::class, 'index'])
+            ->name('courses.index');
+
+        Route::get('/courses/create', [CourseController::class, 'create'])
+            ->name('courses.create');
+
+        Route::post('/courses', [CourseController::class, 'store'])
+            ->name('courses.store');
+
+        Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])
+            ->name('courses.edit');
+
+        Route::put('/courses/{id}', [CourseController::class, 'update'])
+            ->name('courses.update');
+
+        Route::delete('/courses/{id}', [CourseController::class, 'destroy'])
+            ->name('courses.destroy');
+    });

@@ -13,6 +13,12 @@
     </li>
 
     <li>
+        <a href="{{ route('admin.courses.index') }}" class="nav-link">
+            📚 Mis cursos
+        </a>
+    </li>
+
+    <li>
         <a href="#" class="nav-link">
             🎓 Cursos globales
         </a>
