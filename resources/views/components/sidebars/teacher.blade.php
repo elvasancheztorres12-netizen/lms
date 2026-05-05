@@ -8,7 +8,7 @@
     </li>
 
     <li>
-        <a href="#">Cursos</a>
+        <a href="{{ route('teacher.courses') }}">Mis Cursos</a>
     </li>
 
     <li>

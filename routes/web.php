@@ -4,30 +4,33 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TeacherController;
 
+/*
+|--------------------------------------------------------------------------
+| AUTH
+|--------------------------------------------------------------------------
+*/
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware(['auth'])->group(function () {
 
-    Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])
+/*
+|--------------------------------------------------------------------------
+| TEACHER
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->prefix('teacher')->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [TeacherController::class, 'dashboard'])
         ->name('dashboard.teacher');
 
-});
+    // Cursos del docente
+    Route::get('/courses', [TeacherController::class, 'courses'])
+        ->name('teacher.courses');
 
-// Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('dashboard.admin');
-Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard.teacher');
-// Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('dashboard.student');
+    // Estudiantes de un curso
+    Route::get('/courses/{id}/students', [TeacherController::class, 'students'])
+        ->name('teacher.courses.students');
 
-// TEACHER
-Route::prefix('teacher')->middleware('auth')->group(function () {
-    Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard.teacher');
-
-    Route::get('/courses', function () {
-        return 'Cursos del docente';
-    })->name('teacher.courses');
-
-    Route::get('/students', function () {
-        return 'Estudiantes del docente';
-    })->name('teacher.students');
 });

@@ -8,6 +8,8 @@ class User extends Authenticatable
 {
     protected $primaryKey = 'user_id';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'person_id',
         'username',
@@ -21,7 +23,7 @@ class User extends Authenticatable
 
     public function person()
     {
-        return $this->belongsTo(Person::class, 'person_id', 'person_id');
+        return $this->belongsTo(People::class, 'person_id', 'person_id');
     }
 
     public function roles()
@@ -32,6 +34,11 @@ class User extends Authenticatable
     public function trainings()
     {
         return $this->hasMany(Training::class, 'teacher_id', 'user_id');
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class, 'user_id', 'user_id');
     }
 
     public function getAuthPassword()
