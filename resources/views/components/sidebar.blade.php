@@ -1,6 +1,5 @@
 @php
-    $user = auth()->user();
-    $role = optional($user->roles->first())->name;
+    $role = optional(auth()->user()->roles->first())->name;
 @endphp
 
 <div class="sidebar-content d-flex flex-column h-100 p-3">
@@ -9,23 +8,14 @@
         Rol: {{ $role }}
     </span>
 
-    @switch($role)
+    @if($role === 'Administrator')
+        @include('components.sidebars.admin')
 
-        @case('Administrator')
-            @include('components.sidebars.admin')
-            @break
+    @elseif($role === 'Teacher')
+        @include('components.sidebars.teacher')
 
-        @case('Teacher')
-            @include('components.sidebars.teacher')
-            @break
-
-        @case('Student')
-            @include('components.sidebars.student')
-            @break
-
-        @default
-            <p>No role assigned</p>
-
-    @endswitch
+    @elseif($role === 'Student')
+        @include('components.sidebars.student')
+    @endif
 
 </div>

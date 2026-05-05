@@ -31,12 +31,18 @@ class AuthController extends Controller
             $role = optional($user->roles->first())->name;
 
             if ($role === 'Administrator') {
-                return redirect()->route('dashboard.admin');
-            } elseif ($role === 'Teacher') {
-                return redirect()->route('dashboard.teacher');
-            } else {
-                return redirect()->route('dashboard.student');
+                return redirect()->route('admin.dashboard');
             }
+
+            if ($role === 'Teacher') {
+                return redirect()->route('teacher.dashboard');
+            }
+
+            if ($role === 'Student') {
+                return redirect()->route('student.dashboard');
+            }
+
+            Auth::logout();
         }
 
         return back()->withErrors([

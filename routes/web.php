@@ -1,31 +1,34 @@
 <?php
-namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Teacher\TeacherController;
+use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\TrainingController;
 
 /*
 |--------------------------------------------------------------------------
 | AUTH
 |--------------------------------------------------------------------------
 */
-Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
-Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
 | ADMIN
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:Administrator'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:Administrator'])->group(function () {
 
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
-        ->name('dashboard.admin');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    Route::resource('courses', CourseController::class);
+    Route::resource('trainings', TrainingController::class);
 });
 
 /*
@@ -33,16 +36,13 @@ Route::middleware(['auth', 'role:Administrator'])->group(function () {
 | TEACHER
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:Teacher'])->group(function () {
+Route::prefix('teacher')->name('teacher.')->middleware(['auth', 'role:Teacher'])->group(function () {
 
-    Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])
-        ->name('dashboard.teacher');
+    Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('/teacher/courses', [TeacherController::class, 'courses'])
-        ->name('teacher.courses');
+    Route::get('/courses', [TeacherController::class, 'courses'])->name('courses');
 
-    Route::get('/teacher/courses/{id}/students', [TeacherController::class, 'students'])
-        ->name('teacher.courses.students');
+    Route::get('/students/{id}', [TeacherController::class, 'students'])->name('students');
 });
 
 /*
@@ -50,38 +50,7 @@ Route::middleware(['auth', 'role:Teacher'])->group(function () {
 | STUDENT
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:Student'])->group(function () {
+Route::prefix('student')->name('student.')->middleware(['auth', 'role:Student'])->group(function () {
 
-    Route::get('/student/dashboard', [StudentController::class, 'dashboard'])
-        ->name('dashboard.student');
+    Route::get('/dashboard', [StudentController::class, 'index'])->name('dashboard');
 });
-
-/*
-|--------------------------------------------------------------------------
-| TEACHER TRAINING MANAGEMENT
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth', 'role:Administrator'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-
-        Route::get('/courses', [CourseController::class, 'index'])
-            ->name('courses.index');
-
-        Route::get('/courses/create', [CourseController::class, 'create'])
-            ->name('courses.create');
-
-        Route::post('/courses', [CourseController::class, 'store'])
-            ->name('courses.store');
-
-        Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])
-            ->name('courses.edit');
-
-        Route::put('/courses/{id}', [CourseController::class, 'update'])
-            ->name('courses.update');
-
-        Route::delete('/courses/{id}', [CourseController::class, 'destroy'])
-            ->name('courses.destroy');
-    });

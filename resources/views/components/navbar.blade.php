@@ -23,11 +23,11 @@
                 <ul class="dropdown-menu dropdown-menu-end">
 
                     @if($role === 'Teacher')
-                        <li><a class="dropdown-item" href="{{ route('dashboard.teacher') }}">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{{ route('teacher.dashboard') }}">Dashboard</a></li>
                     @elseif($role === 'Administrator')
-                        <li><a class="dropdown-item" href="{{ route('dashboard.admin') }}">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                     @else
-                        <li><a class="dropdown-item" href="{{ route('dashboard.student') }}">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{{ route('student.dashboard') }}">Dashboard</a></li>
                     @endif
 
                     <li>

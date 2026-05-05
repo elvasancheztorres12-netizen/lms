@@ -1,7 +1,7 @@
 <ul class="nav flex-column gap-2">
 
     <li>
-        <a href="{{ route('dashboard.admin') }}" class="nav-link">
+        <a href="{{ route('admin.dashboard') }}" class="nav-link">
             🧭 Dashboard
         </a>
     </li>

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Teacher;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Training;
-use Illuminate\Support\Facades\DB;
+use App\Models\Enrollment;
 
 class TeacherController extends Controller
 {
@@ -44,7 +45,7 @@ class TeacherController extends Controller
     {
         $training = Training::with('course')->findOrFail($id);
 
-        $students = \App\Models\Enrollment::with('student.person')
+        $students = Enrollment::with('student.person')
             ->where('training_id', $id)
             ->get();
 
