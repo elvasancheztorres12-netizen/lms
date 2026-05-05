@@ -24,4 +24,8 @@ class Enrollment extends Model
     {
         return $this->belongsTo(Training::class, 'training_id', 'training_id');
     }
+    public function progress()
+    {
+        return $this->hasMany(Progress::class, 'enrollment_id', 'enrollment_id');
+    }
 }
