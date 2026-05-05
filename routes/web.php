@@ -7,6 +7,7 @@ use App\Http\Controllers\Teacher\TeacherController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\TrainingController;
+use App\Http\Controllers\EnrollmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,11 @@ use App\Http\Controllers\Admin\TrainingController;
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/enroll/{training}', [EnrollmentController::class, 'store'])
+        ->name('enroll.store');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -54,3 +60,4 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'role:Student'])
 
     Route::get('/dashboard', [StudentController::class, 'index'])->name('dashboard');
 });
+
