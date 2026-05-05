@@ -1,23 +1,31 @@
 @php
     $user = auth()->user();
-    $role = optional($user->roles->first())->name ?? 'Student';
+    $role = optional($user->roles->first())->name;
 @endphp
 
 <div class="sidebar-content d-flex flex-column h-100 p-3">
 
-    <div class="mb-3">
-        <span class="badge bg-secondary text-uppercase">
-            Rol: {{ $role }}
-        </span>
-    </div>
+    <span class="badge bg-secondary mb-3">
+        Rol: {{ $role }}
+    </span>
 
-    {{-- CARGA DINÁMICA --}}
-    @if($role === 'Administrator')
-        @include('components.sidebars.admin')
-    @elseif($role === 'Teacher')
-        @include('components.sidebars.teacher')
-    @else
-        @include('components.sidebars.student')
-    @endif
+    @switch($role)
+
+        @case('Administrator')
+            @include('components.sidebars.admin')
+            @break
+
+        @case('Teacher')
+            @include('components.sidebars.teacher')
+            @break
+
+        @case('Student')
+            @include('components.sidebars.student')
+            @break
+
+        @default
+            <p>No role assigned</p>
+
+    @endswitch
 
 </div>

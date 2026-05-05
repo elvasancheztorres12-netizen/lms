@@ -2,25 +2,25 @@
 
     <li>
         <a href="{{ route('dashboard.admin') }}" class="nav-link">
-            <i class="fa fa-tachometer-alt me-2"></i> Panel
+            🧭 Dashboard
         </a>
     </li>
 
     <li>
-        <a href="{{ route('courses.index') }}" class="nav-link">
-            <i class="fa fa-book me-2"></i> Cursos
+        <a href="#" class="nav-link">
+            👥 Usuarios
         </a>
     </li>
 
     <li>
-        <a href="{{ route('modulos.usuarios') }}" class="nav-link">
-            <i class="fa fa-users me-2"></i> Usuarios
+        <a href="#" class="nav-link">
+            🎓 Cursos globales
         </a>
     </li>
 
     <li>
-        <a href="{{ route('modulos.specialtyActions') }}" class="nav-link">
-            <i class="fa fa-list me-2"></i> Especialidades
+        <a href="#" class="nav-link">
+            ⚙️ Configuración
         </a>
     </li>
 

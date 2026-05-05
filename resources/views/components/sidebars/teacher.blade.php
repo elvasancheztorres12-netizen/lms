@@ -1,31 +1,26 @@
 <ul class="nav flex-column gap-2">
 
     <li>
-        <a href="{{ route('dashboard.teacher') }}"
-            class="nav-link {{ request()->routeIs('dashboard.teacher') ? 'active' : '' }}">
-            <i class="fa fa-home me-2"></i> Dashboard
+        <a href="{{ route('dashboard.teacher') }}" class="nav-link">
+            🧭 Dashboard
         </a>
     </li>
 
     <li>
-        <a href="{{ route('teacher.courses') }}">Mis Cursos</a>
-    </li>
-
-    <li>
-        <a href="#" class="nav-link">
-            <i class="fa fa-plus me-2"></i> Crear curso
+        <a href="{{ route('teacher.courses') }}" class="nav-link">
+            📚 Mis cursos
         </a>
     </li>
 
     <li>
         <a href="#" class="nav-link">
-            <i class="fa fa-tasks me-2"></i> Evaluaciones
+            📝 Evaluaciones
         </a>
     </li>
 
     <li>
         <a href="#" class="nav-link">
-            <i class="fa fa-users me-2"></i> Estudiantes
+            👨‍🎓 Estudiantes
         </a>
     </li>
 

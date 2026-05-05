@@ -1,36 +1,56 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TeacherController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | AUTH
 |--------------------------------------------------------------------------
 */
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:Administrator'])->group(function () {
+
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard.admin');
+
+});
 
 /*
 |--------------------------------------------------------------------------
 | TEACHER
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->prefix('teacher')->group(function () {
+Route::middleware(['auth', 'role:Teacher'])->group(function () {
 
-    // Dashboard
-    Route::get('/dashboard', [TeacherController::class, 'dashboard'])
+    Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])
         ->name('dashboard.teacher');
 
-    // Cursos del docente
-    Route::get('/courses', [TeacherController::class, 'courses'])
+    Route::get('/teacher/courses', [TeacherController::class, 'courses'])
         ->name('teacher.courses');
 
-    // Estudiantes de un curso
-    Route::get('/courses/{id}/students', [TeacherController::class, 'students'])
+    Route::get('/teacher/courses/{id}/students', [TeacherController::class, 'students'])
         ->name('teacher.courses.students');
+});
+
+/*
+|--------------------------------------------------------------------------
+| STUDENT
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:Student'])->group(function () {
+
+    Route::get('/student/dashboard', function () {
+        return view('student.dashboard');
+    })->name('dashboard.student');
 
 });

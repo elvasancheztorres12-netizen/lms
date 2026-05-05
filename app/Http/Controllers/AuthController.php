@@ -25,7 +25,6 @@ class AuthController extends Controller
                 'password' => $request->password
             ])
         ) {
-
             $request->session()->regenerate();
 
             $user = Auth::user();
