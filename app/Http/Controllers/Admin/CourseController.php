@@ -11,8 +11,10 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::latest()->get();
-        return view('admin.courses.index', compact('courses'));
+        $courses = Course::orderBy('created_at', 'desc')->get();
+        $specialties = Specialty::all();
+
+        return view('admin.courses.index', compact('courses', 'specialties'));
     }
 
     public function create()

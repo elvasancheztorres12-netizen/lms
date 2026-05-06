@@ -14,6 +14,29 @@
 
     <!-- Custom -->
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+
+    <style>
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bg-avatar-1 { background: #4e73df; }
+        .bg-avatar-2 { background: #1cc88a; }
+        .bg-avatar-3 { background: #f6c23e; }
+        .bg-avatar-4 { background: #e74a3b; }
+        .table-borderless tr {
+            padding: 0.5rem 0;
+        }
+        .table-borderless .border-bottom {
+            border-bottom: 1px solid #dee2e6 !important;
+        }
+    </style>
 </head>
 
 <body class="bg-light d-flex flex-column min-vh-100">

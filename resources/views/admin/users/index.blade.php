@@ -1,38 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="container">
-
         <div class="d-flex justify-content-between mb-3">
-            <h2>Usuarios</h2>
+            <h2>Lista de Estudiantes</h2>
         </div>
 
-        <table class="table table-bordered bg-white">
-            <thead>
+        <table class="table table-borderless">
+            <thead class="border-bottom">
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
-                    <th>Usuario</th>
-                    <th>Rol</th>
-                    <th>Estado</th>
+                    <th>Iniciales</th>
+                    <th>Progreso</th>
+                    <th>Última participación</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($users as $user)
-                    <tr>
-                        <td>{{ $user->user_id }}</td>
-                        <td>{{ $user->person->first_names ?? 'Sin nombre' }}</td>
-                        <td>{{ $user->username }}</td>
-                        <td>{{ optional($user->roles->first())->name }}</td>
-                        <td>{{ $user->status }}</td>
+                    <tr class="border-bottom">
+                        <td>{{ $user->person->first_names ?? 'Sin nombre' }} {{ $user->person->last_names ?? '' }}</td>
+                        <td>
+                            <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">
+                                {{ strtoupper(substr($user->person->first_names ?? 'S', 0, 1) . substr($user->person->last_names ?? 'N', 0, 1)) }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-info progress-bar-striped" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </td>
+                        <td>{{ $user->updated_at ? $user->updated_at->diffForHumans() : 'Nunca' }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
         {{ $users->links() }}
-
     </div>
-
 @endsection
