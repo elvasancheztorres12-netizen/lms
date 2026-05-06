@@ -35,18 +35,19 @@
 
                         <td class="d-flex gap-2">
 
-                            <a href="{{ route('admin.courses.edit', $course->course_id) }}" class="btn btn-sm btn-warning">
+                            <button class="btn btn-sm btn-warning edit-btn" 
+                                    data-id="{{ $course->course_id }}" 
+                                    data-title="{{ $course->title }}" 
+                                    data-description="{{ $course->description }}" 
+                                    data-specialty="{{ $course->specialty_id }}" 
+                                    data-hours="{{ $course->hours_count }}" 
+                                    data-price="{{ $course->reference_price }}">
                                 <i class="bi bi-pencil"></i>
-                            </a>
+                            </button>
 
-                            <form method="POST" action="{{ route('admin.courses.destroy', $course->course_id) }}">
-                                @csrf
-                                @method('DELETE')
-
-                                <button class="btn btn-sm btn-danger">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                            <button class="btn btn-sm btn-danger" onclick="confirmDelete('{{ route('admin.courses.destroy', $course->course_id) }}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
 
                         </td>
                     </tr>
@@ -98,6 +99,94 @@
             </div>
         </div>
 
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-3">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title fw-bold" id="editModalLabel">Editar Curso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editForm" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                                <label for="edit_title" class="form-label">Título</label>
+                                <input type="text" name="title" id="edit_title" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_description" class="form-label">Descripción</label>
+                                <textarea name="description" id="edit_description" class="form-control"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_specialty_id" class="form-label">Especialidad</label>
+                                <select name="specialty_id" id="edit_specialty_id" class="form-control" required>
+                                    <option value="">Seleccionar especialidad</option>
+                                    @foreach($specialties as $specialty)
+                                        <option value="{{ $specialty->specialty_id }}">{{ $specialty->specialty }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_hours_count" class="form-label">Horas</label>
+                                <input type="number" name="hours_count" id="edit_hours_count" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_reference_price" class="form-label">Precio</label>
+                                <input type="number" name="reference_price" id="edit_reference_price" class="form-control" step="0.01">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Actualizar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
+    <script>
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const title = this.getAttribute('data-title');
+                const description = this.getAttribute('data-description');
+                const specialty = this.getAttribute('data-specialty');
+                const hours = this.getAttribute('data-hours');
+                const price = this.getAttribute('data-price');
+
+                document.getElementById('edit_title').value = title;
+                document.getElementById('edit_description').value = description;
+                document.getElementById('edit_specialty_id').value = specialty;
+                document.getElementById('edit_hours_count').value = hours;
+                document.getElementById('edit_reference_price').value = price;
+
+                document.getElementById('editForm').action = `/admin/courses/${id}`;
+
+                new bootstrap.Modal(document.getElementById('editModal')).show();
+            });
+        });
+
+        function confirmDelete(url) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = url;
+                    form.innerHTML = '@csrf @method("DELETE")';
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
+    </script>
 @endsection
