@@ -7,6 +7,7 @@ use App\Http\Controllers\Teacher\TeacherController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\TrainingController;
+use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\EnrollmentController;
 
 /*
@@ -35,6 +36,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:Administrator'
 
     Route::resource('courses', CourseController::class);
     Route::resource('trainings', TrainingController::class);
+    Route::resource('specialties', SpecialtyController::class);
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index']);
 });
 

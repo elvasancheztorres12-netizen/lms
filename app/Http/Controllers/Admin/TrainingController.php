@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Training;
 use App\Models\Course;
+use App\Models\User;
 
 class TrainingController extends Controller
 {
@@ -19,7 +20,10 @@ class TrainingController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('admin.trainings.index', compact('trainings'));
+        $courses = Course::all();
+        $teachers = User::whereHas('roles', fn($q) => $q->where('name', 'Teacher'))->get();
+
+        return view('admin.trainings.index', compact('trainings', 'courses', 'teachers'));
     }
 
     /**

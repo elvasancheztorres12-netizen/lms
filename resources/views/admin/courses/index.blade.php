@@ -12,10 +12,10 @@
             </button>
         </div>
 
-        <table class="table table-bordered bg-white">
-            <thead>
+        <table class="table table-borderless">
+            <thead class="border-bottom">
                 <tr>
-                    <th>ID</th>
+                    <th></th>
                     <th>Título</th>
                     <th>Precio</th>
                     <th>Acciones</th>
@@ -24,15 +24,19 @@
 
             <tbody>
                 @foreach($courses as $course)
-                    <tr>
-                        <td>{{ $course->course_id }}</td>
+                    <tr class="border-bottom">
+                        <td>
+                            <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">
+                                {{ strtoupper(substr($course->title, 0, 1)) }}
+                            </div>
+                        </td>
                         <td>{{ $course->title }}</td>
                         <td>S/ {{ $course->reference_price }}</td>
 
                         <td class="d-flex gap-2">
 
                             <a href="{{ route('admin.courses.edit', $course->course_id) }}" class="btn btn-sm btn-warning">
-                                Editar
+                                <i class="bi bi-pencil"></i>
                             </a>
 
                             <form method="POST" action="{{ route('admin.courses.destroy', $course->course_id) }}">
@@ -40,7 +44,7 @@
                                 @method('DELETE')
 
                                 <button class="btn btn-sm btn-danger">
-                                    Eliminar
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </form>
 
@@ -54,9 +58,9 @@
         <!-- Modal -->
         <div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createCourseModalLabel">Crear Curso</h5>
+                <div class="modal-content border-0 rounded-3">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title fw-bold" id="createCourseModalLabel">Crear Curso</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
