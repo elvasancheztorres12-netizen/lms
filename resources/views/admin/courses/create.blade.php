@@ -27,9 +27,14 @@
 
             <input type="number" name="reference_price" placeholder="Precio" class="form-control mb-2">
 
-            <button class="btn btn-primary">
-                Guardar
-            </button>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary">
+                    Guardar
+                </button>
+                <a href="{{ route('admin.courses.index') }}" class="btn btn-secondary">
+                    Volver
+                </a>
+            </div>
 
         </form>
 

@@ -5,7 +5,12 @@
     <div class="container">
 
         <div class="d-flex justify-content-between mb-3">
-            <h2>Trainings</h2>
+            <div>
+                <h2>Trainings</h2>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary btn-sm mt-2">
+                    Volver
+                </a>
+            </div>
             <a href="{{ route('admin.trainings.create') }}" class="btn btn-primary">
                 + Crear Training
             </a>
