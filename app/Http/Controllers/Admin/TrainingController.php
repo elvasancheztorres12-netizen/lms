@@ -15,6 +15,7 @@ class TrainingController extends Controller
     public function index()
     {
         $trainings = Training::with('course')
+            ->where('status', 'A')
             ->orderBy('created_at', 'desc')
             ->get();
 
