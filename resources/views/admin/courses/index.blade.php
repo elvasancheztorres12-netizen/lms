@@ -12,8 +12,8 @@
             </button>
         </div>
 
-        <table class="table table-borderless">
-            <thead class="border-bottom">
+        <table class="table table-striped table-hover">
+            <thead>
                 <tr>
                     <th></th>
                     <th>Título</th>
@@ -24,7 +24,7 @@
 
             <tbody>
                 @foreach($courses as $course)
-                    <tr class="border-bottom">
+                    <tr>
                         <td>
                             <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">
                                 {{ strtoupper(substr($course->title, 0, 1)) }}
@@ -35,18 +35,18 @@
 
                         <td class="d-flex gap-2">
 
-                            <button class="btn btn-sm btn-warning edit-btn" 
+                            <button class="btn btn-sm btn-primary edit-btn" 
                                     data-id="{{ $course->course_id }}" 
                                     data-title="{{ $course->title }}" 
                                     data-description="{{ $course->description }}" 
                                     data-specialty="{{ $course->specialty_id }}" 
                                     data-hours="{{ $course->hours_count }}" 
                                     data-price="{{ $course->reference_price }}">
-                                <i class="bi bi-pencil"></i>
+                                <i class="bi bi-pencil-square"></i>
                             </button>
 
                             <button class="btn btn-sm btn-danger" onclick="confirmDelete('{{ route('admin.courses.destroy', $course->course_id) }}')">
-                                <i class="bi bi-trash"></i>
+                                <i class="bi bi-trash3-fill"></i>
                             </button>
 
                         </td>

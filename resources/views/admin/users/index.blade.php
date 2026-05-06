@@ -6,8 +6,8 @@
             <h2>Lista de Estudiantes</h2>
         </div>
 
-        <table class="table table-borderless">
-            <thead class="border-bottom">
+        <table class="table table-striped table-hover">
+            <thead>
                 <tr>
                     <th>Nombre</th>
                     <th>Iniciales</th>
@@ -17,7 +17,7 @@
             </thead>
             <tbody>
                 @foreach($users as $user)
-                    <tr class="border-bottom">
+                    <tr>
                         <td>{{ $user->person->first_names ?? 'Sin nombre' }} {{ $user->person->last_names ?? '' }}</td>
                         <td>
                             <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">

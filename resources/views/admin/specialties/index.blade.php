@@ -11,7 +11,7 @@
         </div>
 
         <table class="table table-borderless">
-            <thead class="border-bottom">
+            <thead>
                 <tr>
                     <th></th>
                     <th>Especialidad</th>
@@ -20,7 +20,7 @@
             </thead>
             <tbody>
                 @foreach($specialties as $specialty)
-                    <tr class="border-bottom">
+                    <tr>
                         <td>
                             <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">
                                 {{ strtoupper(substr($specialty->specialty, 0, 1)) }}
@@ -28,13 +28,13 @@
                         </td>
                         <td>{{ $specialty->specialty }}</td>
                         <td class="d-flex gap-2">
-                            <button class="btn btn-sm btn-warning edit-btn" 
+                            <button class="btn btn-sm btn-primary edit-btn" 
                                     data-id="{{ $specialty->specialty_id }}" 
                                     data-specialty="{{ $specialty->specialty }}">
-                                <i class="bi bi-pencil"></i>
+                                <i class="bi bi-pencil-square"></i>
                             </button>
                             <button class="btn btn-sm btn-danger" onclick="confirmDelete('{{ route('admin.specialties.destroy', $specialty->specialty_id) }}')">
-                                <i class="bi bi-trash"></i>
+                                <i class="bi bi-trash3-fill"></i>
                             </button>
                         </td>
                     </tr>

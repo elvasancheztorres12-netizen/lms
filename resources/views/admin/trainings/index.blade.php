@@ -17,7 +17,7 @@
         </div>
 
         <table class="table table-borderless">
-            <thead class="border-bottom">
+            <thead>
                 <tr>
                     <th></th>
                     <th>Curso</th>
@@ -29,7 +29,7 @@
             </thead>
             <tbody>
                 @forelse($trainings as $training)
-                    <tr class="border-bottom">
+                    <tr>
                         <td>
                             <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">
                                 {{ strtoupper(substr(optional($training->course)->title ?? 'C', 0, 1)) }}
@@ -40,16 +40,16 @@
                         <td>{{ ucfirst($training->modality) }}</td>
                         <td>S/ {{ number_format($training->price, 2) }}</td>
                         <td class="d-flex gap-2">
-                            <button class="btn btn-sm btn-warning edit-btn" 
+                            <button class="btn btn-sm btn-primary edit-btn" 
                                     data-id="{{ $training->training_id }}" 
                                     data-course="{{ $training->course_id }}" 
                                     data-teacher="{{ $training->teacher_id }}" 
                                     data-modality="{{ $training->modality }}" 
                                     data-price="{{ $training->price }}">
-                                <i class="bi bi-pencil"></i>
+                                <i class="bi bi-pencil-square"></i>
                             </button>
                             <button class="btn btn-sm btn-danger" onclick="confirmDelete('{{ route('admin.trainings.destroy', $training->training_id) }}')">
-                                <i class="bi bi-trash"></i>
+                                <i class="bi bi-trash3-fill"></i>
                             </button>
                         </td>
                     </tr>
