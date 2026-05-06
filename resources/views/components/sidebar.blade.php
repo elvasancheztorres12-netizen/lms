@@ -75,13 +75,15 @@
                 </a>
             </li>
         </ul>
+    @endif
 
+    @auth
         <form method="POST" action="{{ route('logout') }}" class="mt-4">
             @csrf
             <button type="submit" class="btn btn-outline-danger w-100 text-start">
                 🔒 Cerrar sesión
             </button>
         </form>
-    @endif
+    @endauth
 
 </div>
