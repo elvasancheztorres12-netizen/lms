@@ -13,6 +13,16 @@
 
             <textarea name="description" placeholder="Descripción" class="form-control mb-2"></textarea>
 
+            <div class="mb-3">
+                <label class="form-label">Especialidad</label>
+                <select name="specialty_id" class="form-control" required>
+                    <option value="">Seleccionar especialidad</option>
+                    @foreach($specialties as $specialty)
+                        <option value="{{ $specialty->specialty_id }}">{{ $specialty->specialty }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <input type="number" name="hours_count" placeholder="Horas" class="form-control mb-2">
 
             <input type="number" name="reference_price" placeholder="Precio" class="form-control mb-2">
