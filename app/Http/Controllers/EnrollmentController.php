@@ -33,7 +33,7 @@ class EnrollmentController extends Controller
         Enrollment::create([
             'training_id' => $trainingId,
             'student_id' => $user->user_id,
-            'administrator_id' => 1,
+            'administrator_id' => auth()->id(),
             'enrollment_date' => now()->toDateString(),
             'status' => 'A'
         ]);

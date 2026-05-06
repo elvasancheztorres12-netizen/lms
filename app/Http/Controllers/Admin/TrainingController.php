@@ -46,7 +46,7 @@ class TrainingController extends Controller
         Training::create([
             'course_id' => $request->course_id,
             'teacher_id' => $request->teacher_id,
-            'administrator_id' => 1,
+            'administrator_id' => auth()->id(),
             'modality' => $request->modality,
             'price' => $request->price,
             'creation_date' => now()->toDateString(),

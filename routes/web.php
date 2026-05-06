@@ -35,6 +35,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:Administrator'
 
     Route::resource('courses', CourseController::class);
     Route::resource('trainings', TrainingController::class);
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index']);
 });
 
 /*
