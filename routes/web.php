@@ -15,6 +15,7 @@ use App\Http\Controllers\EnrollmentController;
 | ROOT
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -59,8 +60,15 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth', 'role:Teacher'])
     Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
 
     Route::get('/courses', [TeacherController::class, 'courses'])->name('courses');
+    Route::get('/courses/{id}', [TeacherController::class, 'show'])->name('courses.show');
 
     Route::get('/students/{id}', [TeacherController::class, 'students'])->name('students');
+
+    Route::get('/attendance/{id}', [TeacherController::class, 'attendance'])->name('attendance');
+    Route::post('/attendance/store', [TeacherController::class, 'storeAttendance'])->name('attendance.store');
+
+    Route::get('/tasks/create/{training_id}', [TeacherController::class, 'createTask'])->name('tasks.create');
+    Route::post('/tasks/store', [TeacherController::class, 'storeTask'])->name('tasks.store');
 });
 
 /*
@@ -71,5 +79,6 @@ Route::prefix('teacher')->name('teacher.')->middleware(['auth', 'role:Teacher'])
 Route::prefix('student')->name('student.')->middleware(['auth', 'role:Student'])->group(function () {
 
     Route::get('/dashboard', [StudentController::class, 'index'])->name('dashboard');
-});
 
+    Route::get('/courses', [StudentController::class, 'courses'])->name('courses.index');
+});

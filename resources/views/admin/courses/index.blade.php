@@ -2,62 +2,77 @@
 
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid px-4 py-1">
 
-        <div class="d-flex justify-content-between mb-3">
-            <h2>Cursos (Admin)</h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 mb-4 text-gray-800">Cursos</h1>
 
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCourseModal">
+            <a href="{{ route('admin.courses.create') }}" class="btn btn-primary">
                 + Crear curso
-            </button>
+            </a>
         </div>
 
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Título</th>
-                    <th>Precio</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+        <div class="card shadow mb-4">
+            <div class="card-body p-3">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th class="align-middle"></th>
+                                <th class="align-middle">Título</th>
+                                <th class="align-middle">Detalles</th>
+                                <th class="align-middle">Estado</th>
+                                <th class="align-middle text-end">Acciones</th>
+                            </tr>
+                        </thead>
 
-            <tbody>
-                @foreach($courses as $course)
-                    <tr>
-                        <td>
-                            <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">
-                                {{ strtoupper(substr($course->title, 0, 1)) }}
-                            </div>
-                        </td>
-                        <td>{{ $course->title }}</td>
-                        <td>S/ {{ $course->reference_price }}</td>
-
-                        <td class="d-flex gap-2">
-
-                            <button class="btn btn-sm btn-primary edit-btn" 
-                                    data-id="{{ $course->course_id }}" 
-                                    data-title="{{ $course->title }}" 
-                                    data-description="{{ $course->description }}" 
-                                    data-specialty="{{ $course->specialty_id }}" 
-                                    data-hours="{{ $course->hours_count }}" 
-                                    data-price="{{ $course->reference_price }}">
-                                <i class="bi bi-pencil-square"></i>
-                            </button>
-
-                            <button class="btn btn-sm btn-danger" onclick="confirmDelete('{{ route('admin.courses.destroy', $course->course_id) }}')">
-                                <i class="bi bi-trash3-fill"></i>
-                            </button>
-
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-
-        </table>
+                        <tbody>
+                            @foreach($courses as $course)
+                                <tr>
+                                    <td class="align-middle pe-3">
+                                        <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">
+                                            {{ strtoupper(substr($course->title, 0, 1)) }}
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="fw-bold">{{ $course->title }}</div>
+                                        <div class="text-muted small">
+                                            {{ optional($course->specialty)->specialty ?? 'Sin especialidad' }}
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="text-muted small">
+                                            Precio: S/ {{ number_format($course->reference_price, 2) }}<br>
+                                            Horas: {{ $course->hours_count ?? 0 }}
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span
+                                            class="badge bg-info">{{ $course->hours_count ? $course->hours_count . ' hrs' : 'Sin horas' }}</span>
+                                    </td>
+                                    <td class="align-middle text-end">
+                                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $course->course_id }}"
+                                            data-title="{{ $course->title }}" data-description="{{ $course->description }}"
+                                            data-specialty="{{ $course->specialty_id }}" data-hours="{{ $course->hours_count }}"
+                                            data-price="{{ $course->reference_price }}">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger"
+                                            onclick="confirmDelete('{{ route('admin.courses.destroy', $course->course_id) }}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel" aria-hidden="true">
+        <div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 rounded-3">
                     <div class="modal-header border-0">
@@ -90,7 +105,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="reference_price" class="form-label">Precio</label>
-                                <input type="number" name="reference_price" id="reference_price" class="form-control" step="0.01">
+                                <input type="number" name="reference_price" id="reference_price" class="form-control"
+                                    step="0.01">
                             </div>
                             <button type="submit" class="btn btn-primary">Guardar</button>
                         </form>
@@ -134,7 +150,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="edit_reference_price" class="form-label">Precio</label>
-                                <input type="number" name="reference_price" id="edit_reference_price" class="form-control" step="0.01">
+                                <input type="number" name="reference_price" id="edit_reference_price" class="form-control"
+                                    step="0.01">
                             </div>
                             <button type="submit" class="btn btn-primary">Actualizar</button>
                         </form>
@@ -147,7 +164,7 @@
 
     <script>
         document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const id = this.getAttribute('data-id');
                 const title = this.getAttribute('data-title');
                 const description = this.getAttribute('data-description');
