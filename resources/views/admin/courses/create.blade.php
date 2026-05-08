@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container-fluid px-4 py-1">
+    <div class="container-fluid px-4 py-4">
 
         <div class="card shadow mb-4">
             <div class="card-body p-4">

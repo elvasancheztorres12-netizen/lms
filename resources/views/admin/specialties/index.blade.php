@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid px-4 py-1">
+    <div class="container-fluid px-4 py-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 mb-4 text-gray-800">Especialidades</h1>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createSpecialtyModal">
@@ -40,13 +40,13 @@
                                         <span class="badge bg-success">Activo</span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $specialty->specialty_id }}"
+                                        <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $specialty->specialty_id }}"
                                             data-specialty="{{ $specialty->specialty }}">
-                                            <i class="fas fa-edit"></i>
+                                            <i class="bi bi-pencil-square"></i>
                                         </button>
                                         <button class="btn btn-sm btn-danger"
                                             onclick="confirmDelete('{{ route('admin.specialties.destroy', $specialty->specialty_id) }}')">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="bi bi-trash3-fill"></i>
                                         </button>
                                     </td>
                                 </tr>

@@ -2,14 +2,14 @@
 
 @section('content')
 
-    <div class="container-fluid px-4 py-1">
+    <div class="container-fluid px-4 py-4">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 mb-4 text-gray-800">Cursos</h1>
 
-            <a href="{{ route('admin.courses.create') }}" class="btn btn-primary">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCourseModal">
                 + Crear curso
-            </a>
+            </button>
         </div>
 
         <div class="card shadow mb-4">
@@ -51,15 +51,15 @@
                                             class="badge bg-info">{{ $course->hours_count ? $course->hours_count . ' hrs' : 'Sin horas' }}</span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $course->course_id }}"
+                                        <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $course->course_id }}"
                                             data-title="{{ $course->title }}" data-description="{{ $course->description }}"
                                             data-specialty="{{ $course->specialty_id }}" data-hours="{{ $course->hours_count }}"
                                             data-price="{{ $course->reference_price }}">
-                                            <i class="fas fa-edit"></i>
+                                            <i class="bi bi-pencil-square"></i>
                                         </button>
                                         <button class="btn btn-sm btn-danger"
                                             onclick="confirmDelete('{{ route('admin.courses.destroy', $course->course_id) }}')">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="bi bi-trash3-fill"></i>
                                         </button>
                                     </td>
                                 </tr>

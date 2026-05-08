@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container-fluid px-4 py-1">
+    <div class="container-fluid px-4 py-4">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
@@ -37,8 +37,7 @@
                                     <td class="align-middle">
                                         <div class="fw-bold">{{ optional($training->course)->title ?? 'Sin curso' }}</div>
                                         <div class="text-muted small">
-                                            {{ optional($training->teacher->person)->first_names ?? 'Sin nombre' }}
-                                        </div>
+                                            {{ optional($training->teacher->person)->first_names ?? 'Sin nombre' }}</div>
                                     </td>
                                     <td class="align-middle">
                                         <div class="text-muted small">
@@ -58,14 +57,14 @@
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($training->modality) }}</span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $training->training_id }}"
+                                        <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $training->training_id }}"
                                             data-course="{{ $training->course_id }}" data-teacher="{{ $training->teacher_id }}"
                                             data-modality="{{ $training->modality }}" data-price="{{ $training->price }}">
-                                            <i class="fas fa-edit"></i>
+                                            <i class="bi bi-pencil-square"></i>
                                         </button>
                                         <button class="btn btn-sm btn-danger"
                                             onclick="confirmDelete('{{ route('admin.trainings.destroy', $training->training_id) }}')">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="bi bi-trash3-fill"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -107,8 +106,7 @@
                                     <option value="">Seleccionar docente</option>
                                     @foreach($teachers as $teacher)
                                         <option value="{{ $teacher->user_id }}">
-                                            {{ $teacher->person->first_names ?? 'Sin nombre' }}
-                                        </option>
+                                            {{ $teacher->person->first_names ?? 'Sin nombre' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -158,8 +156,7 @@
                                     <option value="">Seleccionar docente</option>
                                     @foreach($teachers as $teacher)
                                         <option value="{{ $teacher->user_id }}">
-                                            {{ $teacher->person->first_names ?? 'Sin nombre' }}
-                                        </option>
+                                            {{ $teacher->person->first_names ?? 'Sin nombre' }}</option>
                                     @endforeach
                                 </select>
                             </div>
