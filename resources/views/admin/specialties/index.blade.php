@@ -4,7 +4,7 @@
     <div class="container-fluid px-4 py-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 mb-4 text-gray-800">Especialidades</h1>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createSpecialtyModal">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#createSpecialtyModal">
                 + Crear especialidad
             </button>
         </div>
@@ -64,7 +64,7 @@
                 <div class="modal-content border-0 rounded-3">
                     <div class="modal-header border-0">
                         <h5 class="modal-title fw-bold" id="createSpecialtyModalLabel">Crear Especialidad</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form method="POST" action="{{ route('admin.specialties.store') }}">
@@ -86,7 +86,7 @@
                 <div class="modal-content border-0 rounded-3">
                     <div class="modal-header border-0">
                         <h5 class="modal-title fw-bold" id="editModalLabel">Editar Especialidad</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="editForm" method="POST">

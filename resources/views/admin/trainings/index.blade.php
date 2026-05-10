@@ -8,7 +8,7 @@
             <div>
                 <h1 class="h3 mb-4 text-gray-800">Capacitaciones</h1>
             </div>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTrainingModal">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#createTrainingModal">
                 + Crear capacitación
             </button>
         </div>
@@ -86,7 +86,7 @@
                 <div class="modal-content border-0 rounded-3">
                     <div class="modal-header border-0">
                         <h5 class="modal-title fw-bold" id="createTrainingModalLabel">Crear Capacitación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form method="POST" action="{{ route('admin.trainings.store') }}">
@@ -135,7 +135,7 @@
                 <div class="modal-content border-0 rounded-3">
                     <div class="modal-header border-0">
                         <h5 class="modal-title fw-bold" id="editModalLabel">Editar Capacitación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="editForm" method="POST">
