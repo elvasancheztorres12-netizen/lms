@@ -43,7 +43,9 @@
                                         <span class="badge bg-primary">{{ $roleName }}</span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <button class="btn btn-sm btn-info">Ver Detalles</button>
+                                        <button class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach

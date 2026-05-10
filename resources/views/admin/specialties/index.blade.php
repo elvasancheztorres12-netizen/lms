@@ -40,13 +40,13 @@
                                         <span class="badge bg-success">Activo</span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $specialty->specialty_id }}"
+                                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $specialty->specialty_id }}"
                                             data-specialty="{{ $specialty->specialty }}">
-                                            <i class="bi bi-pencil-square"></i>
+                                            <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="btn btn-sm btn-danger"
                                             onclick="confirmDelete('{{ route('admin.specialties.destroy', $specialty->specialty_id) }}')">
-                                            <i class="bi bi-trash3-fill"></i>
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>

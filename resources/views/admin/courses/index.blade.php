@@ -7,9 +7,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 mb-4 text-gray-800">Cursos</h1>
 
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCourseModal">
-                + Crear curso
-            </button>
+            <a href="{{ route('admin.courses.create') }}" class="btn btn-primary">+ Crear curso</a>
         </div>
 
         <div class="card shadow mb-4">
@@ -51,66 +49,21 @@
                                             class="badge bg-info">{{ $course->hours_count ? $course->hours_count . ' hrs' : 'Sin horas' }}</span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $course->course_id }}"
+                                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $course->course_id }}"
                                             data-title="{{ $course->title }}" data-description="{{ $course->description }}"
                                             data-specialty="{{ $course->specialty_id }}" data-hours="{{ $course->hours_count }}"
                                             data-price="{{ $course->reference_price }}">
-                                            <i class="bi bi-pencil-square"></i>
+                                            <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="btn btn-sm btn-danger"
                                             onclick="confirmDelete('{{ route('admin.courses.destroy', $course->course_id) }}')">
-                                            <i class="bi bi-trash3-fill"></i>
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 rounded-3">
-                    <div class="modal-header border-0">
-                        <h5 class="modal-title fw-bold" id="createCourseModalLabel">Crear Curso</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST" action="{{ route('admin.courses.store') }}">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Título</label>
-                                <input type="text" name="title" id="title" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Descripción</label>
-                                <textarea name="description" id="description" class="form-control"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="specialty_id" class="form-label">Especialidad</label>
-                                <select name="specialty_id" id="specialty_id" class="form-control" required>
-                                    <option value="">Seleccionar especialidad</option>
-                                    @foreach($specialties as $specialty)
-                                        <option value="{{ $specialty->specialty_id }}">{{ $specialty->specialty }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="hours_count" class="form-label">Horas</label>
-                                <input type="number" name="hours_count" id="hours_count" class="form-control">
-                            </div>
-                            <div class="mb-3">
-                                <label for="reference_price" class="form-label">Precio</label>
-                                <input type="number" name="reference_price" id="reference_price" class="form-control"
-                                    step="0.01">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>

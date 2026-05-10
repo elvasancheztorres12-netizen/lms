@@ -57,14 +57,14 @@
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($training->modality) }}</span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <button class="btn btn-sm btn-primary edit-btn" data-id="{{ $training->training_id }}"
+                                        <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $training->training_id }}"
                                             data-course="{{ $training->course_id }}" data-teacher="{{ $training->teacher_id }}"
                                             data-modality="{{ $training->modality }}" data-price="{{ $training->price }}">
-                                            <i class="bi bi-pencil-square"></i>
+                                            <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="btn btn-sm btn-danger"
                                             onclick="confirmDelete('{{ route('admin.trainings.destroy', $training->training_id) }}')">
-                                            <i class="bi bi-trash3-fill"></i>
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
