@@ -4,7 +4,8 @@
     <div class="container-fluid px-4 py-1">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 mb-4 text-gray-800">Especialidades</h1>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#createSpecialtyModal">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#createSpecialtyModal"
+                    data-backdrop="static" data-keyboard="false">
                 + Crear especialidad
             </button>
         </div>
@@ -58,35 +59,39 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="createSpecialtyModal" tabindex="-1" aria-labelledby="createSpecialtyModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="createSpecialtyModal" tabindex="-1" role="dialog"
+             aria-labelledby="createSpecialtyModalLabel" aria-hidden="true"
+             data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 rounded-3">
                     <div class="modal-header border-0">
                         <h5 class="modal-title fw-bold" id="createSpecialtyModalLabel">Crear Especialidad</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="{{ route('admin.specialties.store') }}">
+                        <form method="POST" action="{{ route('admin.specialties.store') }}" id="createSpecialtyForm">
                             @csrf
                             <div class="mb-3">
                                 <label for="specialty" class="form-label">Especialidad</label>
                                 <input type="text" name="specialty" id="specialty" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
                         </form>
+                    </div>
+                    <div class="modal-footer border-0 bg-light rounded-bottom-3">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="createSpecialtyForm" class="btn btn-primary">Guardar</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Edit Modal -->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog"
+             aria-labelledby="editModalLabel" aria-hidden="true"
+             data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content border-0 rounded-3">
                     <div class="modal-header border-0">
                         <h5 class="modal-title fw-bold" id="editModalLabel">Editar Especialidad</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="editForm" method="POST">
@@ -96,8 +101,11 @@
                                 <label for="edit_specialty" class="form-label">Especialidad</label>
                                 <input type="text" name="specialty" id="edit_specialty" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Actualizar</button>
                         </form>
+                    </div>
+                    <div class="modal-footer border-0 bg-light rounded-bottom-3">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="editForm" class="btn btn-primary">Actualizar</button>
                     </div>
                 </div>
             </div>
@@ -113,7 +121,10 @@
 
                 document.getElementById('edit_specialty').value = specialty;
                 document.getElementById('editForm').action = `/admin/specialties/${id}`;
-                new bootstrap.Modal(document.getElementById('editModal')).show();
+                new bootstrap.Modal(document.getElementById('editModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                }).show();
             });
         });
 
