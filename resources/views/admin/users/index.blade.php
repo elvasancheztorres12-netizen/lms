@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid px-4    -4">
+    <div class="container-fluid px-4 py-1">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 mb-4 text-gray-800">Usuarios</h1>
             <button class="btn btn-primary disabled" aria-disabled="true">+ Crear usuario</button>
