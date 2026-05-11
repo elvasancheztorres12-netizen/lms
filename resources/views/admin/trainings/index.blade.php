@@ -205,10 +205,7 @@
 
                 document.getElementById('editForm').action = `/admin/trainings/${id}`;
 
-                new bootstrap.Modal(document.getElementById('editModal'), {
-                    backdrop: 'static',
-                    keyboard: false
-                }).show();
+                $('#editModal').modal({backdrop: 'static', keyboard: false});
             });
         });
 

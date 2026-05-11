@@ -121,10 +121,7 @@
 
                 document.getElementById('edit_specialty').value = specialty;
                 document.getElementById('editForm').action = `/admin/specialties/${id}`;
-                new bootstrap.Modal(document.getElementById('editModal'), {
-                    backdrop: 'static',
-                    keyboard: false
-                }).show();
+                $('#editModal').modal({backdrop: 'static', keyboard: false});
             });
         });
 
