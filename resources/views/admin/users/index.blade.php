@@ -53,69 +53,70 @@
                     </form>
                 </div>
             </div>
-            <div class="card-body p-0">
+            
+            <div class="card-body p-3">
                 @php
                     $usersByRole = $users->groupBy(function($user) {
                         return $user->roles->pluck('name')->first() ?? 'Sin Rol';
                     });
                 @endphp
+
+                {{-- SECCIÓN DE ACORDEONES (Solo Admin y Teacher) --}}
                 <div class="accordion" id="usersAccordion">
                     @foreach($usersByRole as $roleName => $roleUsers)
-                        <div class="accordion-item border-0 shadow-sm mb-2 rounded">
-                            <h2 class="accordion-header" id="heading{{ str_replace(' ', '', $roleName) }}">
-                                <button class="accordion-button collapsed bg-white text-dark fw-bold" type="button" data-toggle="collapse" data-target="#collapse{{ str_replace(' ', '', $roleName) }}" aria-expanded="false" aria-controls="collapse{{ str_replace(' ', '', $roleName) }}">
-                                    <i class="fas fa-users me-2"></i> {{ $roleName }} ({{ $roleUsers->count() }} usuarios)
-                                </button>
-                            </h2>
-                            <div id="collapse{{ str_replace(' ', '', $roleName) }}" class="accordion-collapse collapse" aria-labelledby="heading{{ str_replace(' ', '', $roleName) }}" data-parent="#usersAccordion">
-                                <div class="accordion-body p-0">
-                                    <div class="table-responsive">
-                                        <table class="table table-sm table-hover mb-0">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th class="align-middle"></th>
-                                                    <th class="align-middle">Nombre</th>
-                                                    <th class="align-middle">Detalles</th>
-                                                    <th class="align-middle">Estado</th>
-                                                    <th class="align-middle text-end">Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($roleUsers as $user)
-                                                    @php
-                                                        $fullName = trim(($user->person->first_names ?? 'Sin nombre') . ' ' . ($user->person->last_names ?? ''));
-                                                        $initials = strtoupper(substr($user->person->first_names ?? 'S', 0, 1) . substr($user->person->last_names ?? 'N', 0, 1));
-                                                    @endphp
+                        {{-- Filtro estricto: Solo permitimos pintar Administrator y Teacher --}}
+                        @if($roleName === 'Administrator' || $roleName === 'Teacher')
+                            <div class="accordion-item border-0 shadow-sm mb-2 rounded">
+                                <h2 class="accordion-header" id="heading{{ str_replace(' ', '', $roleName) }}">
+                                    <button class="accordion-button collapsed bg-white text-dark fw-bold" type="button" data-toggle="collapse" data-target="#collapse{{ str_replace(' ', '', $roleName) }}" aria-expanded="false" aria-controls="collapse{{ str_replace(' ', '', $roleName) }}">
+                                        <i class="fas fa-user-shield me-2 text-secondary"></i> {{ $roleName }} ({{ $roleUsers->count() }} usuarios)
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ str_replace(' ', '', $roleName) }}" class="accordion-collapse collapse" aria-labelledby="heading{{ str_replace(' ', '', $roleName) }}" data-parent="#usersAccordion">
+                                    <div class="accordion-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover mb-0">
+                                                <thead class="table-light">
                                                     <tr>
-                                                        <td class="align-middle pe-3">
-                                                            <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">
-                                                                {{ $initials }}
-                                                            </div>
-                                                        </td>
-                                                        <td class="align-middle">
-                                                            <div class="fw-bold">{{ $fullName }}</div>
-                                                        </td>
-                                                        <td class="align-middle">
-                                                            <div class="text-muted small">{{ $user->person->email ?? 'Sin email' }}</div>
-                                                        </td>
-                                                        <td class="align-middle">
-                                                            <span class="badge bg-primary">{{ $roleName }}</span>
-                                                        </td>
-                                                        <td class="align-middle text-end">
-                                                            <button class="btn btn-sm btn-info">
-                                                                <i class="fas fa-eye"></i>
-                                                            </button>
-                                                        </td>
+                                                        <th class="align-middle px-3" style="width: 50px;"></th>
+                                                        <th class="align-middle">Nombre</th>
+                                                        <th class="align-middle">Detalles</th>
+                                                        <th class="align-middle">Estado</th>
+                                                        <th class="align-middle text-end px-3">Acciones</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($roleUsers as $user)
+                                                        @php
+                                                            $fullName = trim(($user->person->first_names ?? 'Sin nombre') . ' ' . ($user->person->last_names ?? ''));
+                                                            $initials = strtoupper(substr($user->person->first_names ?? 'S', 0, 1) . substr($user->person->last_names ?? 'N', 0, 1));
+                                                        @endphp
+                                                        <tr>
+                                                            <td class="align-middle ps-3 pe-0">
+                                                                <div class="avatar-circle rounded-circle bg-avatar-{{ ($loop->index % 4) + 1 }}">
+                                                                    {{ $initials }}
+                                                                </div>
+                                                            </td>
+                                                            <td class="align-middle fw-bold">{{ $fullName }}</td>
+                                                            <td class="align-middle text-muted small">{{ $user->person->email ?? 'Sin email' }}</td>
+                                                            <td class="align-middle">
+                                                                <span class="badge {{ $roleName == 'Administrator' ? 'bg-danger' : 'bg-warning text-dark' }}">{{ $roleName }}</span>
+                                                            </td>
+                                                            <td class="align-middle text-end pe-3">
+                                                                <button class="btn btn-sm btn-info text-white"><i class="fas fa-eye"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                     @endforeach
                 </div>
+
             </div>
         </div>
     </div>

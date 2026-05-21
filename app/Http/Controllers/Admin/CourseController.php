@@ -16,14 +16,16 @@ class CourseController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
             
-        $specialties = Specialty::orderBy('name', 'asc')->get();
+        // CORRECCIÓN: Se cambió 'name' por 'specialty' que es la columna real de tu BD
+        $specialties = Specialty::orderBy('specialty', 'asc')->get();
 
         return view('admin.courses.index', compact('courses', 'specialties'));
     }
 
     public function create()
     {
-        $specialties = Specialty::orderBy('name', 'asc')->get();
+        // CORRECCIÓN: Se cambió 'name' por 'specialty'
+        $specialties = Specialty::orderBy('specialty', 'asc')->get();
         return view('admin.courses.create', compact('specialties'));
     }
 
@@ -54,7 +56,9 @@ class CourseController extends Controller
     public function edit($id)
     {
         $course = Course::findOrFail($id);
-        $specialties = Specialty::orderBy('name', 'asc')->get();
+        
+        // CORRECCIÓN: Se cambió 'name' por 'specialty'
+        $specialties = Specialty::orderBy('specialty', 'asc')->get();
         return view('admin.courses.edit', compact('course', 'specialties'));
     }
 
