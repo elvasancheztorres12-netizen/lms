@@ -11,15 +11,19 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::orderBy('created_at', 'desc')->get();
-        $specialties = Specialty::all();
+        // Añadimos 'specialty' con eager loading para evitar el problema N+1 en la tabla
+        $courses = Course::with('specialty')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        $specialties = Specialty::orderBy('name', 'asc')->get();
 
         return view('admin.courses.index', compact('courses', 'specialties'));
     }
 
     public function create()
     {
-        $specialties = Specialty::all();
+        $specialties = Specialty::orderBy('name', 'asc')->get();
         return view('admin.courses.create', compact('specialties'));
     }
 
@@ -50,7 +54,7 @@ class CourseController extends Controller
     public function edit($id)
     {
         $course = Course::findOrFail($id);
-        $specialties = Specialty::all();
+        $specialties = Specialty::orderBy('name', 'asc')->get();
         return view('admin.courses.edit', compact('course', 'specialties'));
     }
 
@@ -58,21 +62,32 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
 
-        $course->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'reference_price' => $request->reference_price
+        $request->validate([
+            'specialty_id' => 'required|exists:specialties,specialty_id',
+            'title' => 'required|string|max:150',
+            'description' => 'nullable|string',
+            'hours_count' => 'nullable|integer|min:0',
+            'reference_price' => 'nullable|numeric|min:0',
         ]);
 
+        $course->update($request->only([
+            'specialty_id',
+            'title',
+            'description',
+            'hours_count',
+            'reference_price'
+        ]));
+
         return redirect()->route('admin.courses.index')
-            ->with('success', 'Curso actualizado');
+            ->with('success', 'Curso actualizado correctamente');
     }
 
     public function destroy($id)
     {
-        Course::destroy($id);
+        $course = Course::findOrFail($id);
+        $course->delete();
 
         return redirect()->route('admin.courses.index')
-            ->with('success', 'Curso eliminado');
+            ->with('success', 'Curso eliminado correctamente');
     }
 }

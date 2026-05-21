@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Training;
 use App\Models\Attendance;
 use App\Models\Assessment;
+use App\Models\AssessmentAttempt;
 use App\Models\Enrollment;
 use Illuminate\Support\Facades\DB;
 
@@ -20,6 +21,10 @@ class TeacherController extends Controller
         $totalActiveTrainings = $user->trainings->where('status', 'A')->count();
         $totalTasks = Assessment::whereHas('training', fn($q) => $q->where('teacher_id', $user->user_id))->count();
 
+        $totalAttempts = AssessmentAttempt::whereHas('assessment.training', fn($q) => $q->where('teacher_id', $user->user_id))->count();
+        $averageScore = AssessmentAttempt::whereHas('assessment.training', fn($q) => $q->where('teacher_id', $user->user_id))->avg('score');
+        $averageScore = $averageScore !== null ? round($averageScore, 2) : 0;
+
         $recentActivities = Assessment::with('training.course')
             ->whereHas('training', fn($q) => $q->where('teacher_id', $user->user_id))
             ->latest('created_at')
@@ -30,6 +35,8 @@ class TeacherController extends Controller
             'totalStudents',
             'totalActiveTrainings',
             'totalTasks',
+            'totalAttempts',
+            'averageScore',
             'recentActivities'
         ));
     }
@@ -49,10 +56,11 @@ class TeacherController extends Controller
     {
         $user = auth()->user();
 
+        // Cargamos el training con sus evaluaciones y las relaciones necesarias para las notas
         $training = Training::with([
             'course',
+            'assessments.attempts', // Trae los intentos globales de las evaluaciones de este curso
             'enrollments.student.person',
-            'assessments'
         ])
             ->where('training_id', $id)
             ->where('teacher_id', $user->user_id)
@@ -62,7 +70,16 @@ class TeacherController extends Controller
         $totalAssessments = $training->assessments->count();
         $totalAttendanceRecords = Attendance::whereHas('schedule', fn($q) => $q->where('training_id', $id))->count();
 
-        return view('teacher.courses.show', compact('training', 'totalStudents', 'totalAssessments', 'totalAttendanceRecords'));
+        // Obtenemos los estudiantes directamente desde las inscripciones cargadas
+        $students = $training->enrollments;
+
+        return view('teacher.courses.show', compact(
+            'training', 
+            'totalStudents', 
+            'totalAssessments', 
+            'totalAttendanceRecords',
+            'students' // Enviamos los estudiantes para mapear la matriz en la vista
+        ));
     }
 
     public function students($id)
@@ -100,50 +117,6 @@ class TeacherController extends Controller
         return view('teacher.attendance', compact('training', 'students'));
     }
 
-    public function storeAttendance(Request $request)
-    {
-        $request->validate([
-            'training_id' => 'required|exists:trainings,training_id',
-            'attendances' => 'required|array',
-            'attendances.*.student_id' => 'required|exists:users,user_id',
-            'attendances.*.status' => 'required|in:P,A'
-        ]);
-
-        $user = auth()->user();
-
-        $training = Training::where('training_id', $request->training_id)
-            ->where('teacher_id', $user->user_id)
-            ->first();
-
-        if (!$training) {
-            abort(403, 'No autorizado: Este training no te pertenece.');
-        }
-
-        $enrolledStudentIds = $training->enrollments->pluck('student_id')->toArray();
-
-        DB::transaction(function () use ($request, $enrolledStudentIds) {
-            $date = now()->toDateString();
-
-            foreach ($request->attendances as $attendance) {
-                if (!in_array($attendance['student_id'], $enrolledStudentIds)) {
-                    continue;
-                }
-
-                Attendance::updateOrCreate(
-                    [
-                        'training_id' => $request->training_id,
-                        'student_id' => $attendance['student_id'],
-                        'date' => $date
-                    ],
-                    [
-                        'status' => $attendance['status']
-                    ]
-                );
-            }
-        });
-
-        return redirect()->back()->with('success', 'Asistencia registrada correctamente.');
-    }
 
     public function createTask($training_id)
     {
@@ -187,7 +160,7 @@ class TeacherController extends Controller
             'active' => true,
         ]);
 
-        return redirect()->route('teacher.attendance', $request->training_id)
+        return redirect()->route('teacher.courses.show', $request->training_id)
             ->with('success', 'Tarea creada correctamente.');
     }
 }

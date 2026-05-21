@@ -36,6 +36,30 @@ class UsersSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
+                'person_id' => 27,
+                'username' => 'roberto.vega.teacher',
+                'password' => Hash::make('123456'),
+                'status' => 'A',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'person_id' => 28,
+                'username' => 'sofia.luna.teacher',
+                'password' => Hash::make('123456'),
+                'status' => 'A',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'person_id' => 29,
+                'username' => 'diego.ponce.teacher',
+                'password' => Hash::make('123456'),
+                'status' => 'A',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
                 'person_id' => 4,
                 'username' => 'ana.rojas.student',
                 'password' => Hash::make('123456'),
