@@ -58,7 +58,6 @@
             </div>
         </div>
 
-        <!-- Modal -->
         <div class="modal fade" id="createSpecialtyModal" tabindex="-1" role="dialog"
              aria-labelledby="createSpecialtyModalLabel" aria-hidden="true"
              data-backdrop="static" data-keyboard="false">
@@ -84,7 +83,6 @@
             </div>
         </div>
 
-        <!-- Edit Modal -->
         <div class="modal fade" id="editModal" tabindex="-1" role="dialog"
              aria-labelledby="editModalLabel" aria-hidden="true"
              data-backdrop="static" data-keyboard="false">

@@ -14,7 +14,11 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
+        // 1. Modificamos la consulta base para excluir a los Estudiantes de esta sección
         $query = User::with(['person', 'roles'])
+            ->whereHas('roles', function ($q) {
+                $q->where('name', '!=', 'Student');
+            })
             ->when($request->search, function ($query) use ($request) {
                 $query->whereHas('person', function ($q) use ($request) {
                     $q->where('first_names', 'like', '%' . $request->search . '%')
@@ -39,7 +43,11 @@ class UserController extends Controller
         $currentYear = date('Y');
         $years = range($currentYear, $currentYear - 5);
 
-        return view('admin.users.index', compact('users', 'roles', 'years'));
+        // 2. Traemos las especialidades desde la Base de Datos organizadas por su nombre real ('specialty')
+        $specialties = \App\Models\Specialty::orderBy('specialty', 'asc')->get();
+
+        // 3. Agregamos 'specialties' al compact
+        return view('admin.users.index', compact('users', 'roles', 'years', 'specialties'));
     }
 
     public function store(Request $request)
@@ -58,6 +66,9 @@ class UserController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'status' => 'sometimes|in:A,I',
             'role_id' => 'required|exists:roles,role_id',
+            // NUEVO: Validación para las especialidades del profesor
+            'specialty_ids' => 'nullable|array',
+            'specialty_ids.*' => 'exists:specialties,specialty_id',
         ]);
 
         $user = DB::transaction(function () use ($request) {
@@ -81,6 +92,12 @@ class UserController extends Controller
             ]);
 
             $user->roles()->attach($request->role_id);
+
+            // NUEVO: Si viene el rol de profesor, guardamos sus especialidades asociadas
+            $selectedRole = Role::find($request->role_id);
+            if ($selectedRole && $selectedRole->name === 'Teacher' && $request->has('specialty_ids')) {
+                $user->specialties()->sync($request->specialty_ids);
+            }
 
             return $user;
         });
@@ -107,6 +124,9 @@ class UserController extends Controller
             'password' => 'nullable|string|min:6|confirmed',
             'status' => 'sometimes|in:A,I',
             'role_id' => 'required|exists:roles,role_id',
+            // NUEVO: Validación para las especialidades al editar
+            'specialty_ids' => 'nullable|array',
+            'specialty_ids.*' => 'exists:specialties,specialty_id',
         ]);
 
         DB::transaction(function () use ($request, $user) {
@@ -134,6 +154,14 @@ class UserController extends Controller
             $user->update($userData);
 
             $user->roles()->sync([$request->role_id]);
+
+            // NUEVO: Sincronizar las especialidades. Si deja de ser Teacher o se desmarcan todas, se limpia la tabla pivote
+            $selectedRole = Role::find($request->role_id);
+            if ($selectedRole && $selectedRole->name === 'Teacher') {
+                $user->specialties()->sync($request->specialty_ids ?? []);
+            } else {
+                $user->specialties()->sync([]); // Si el nuevo rol no es Teacher, remueve cualquier especialidad previa
+            }
         });
 
         return redirect()->route('admin.users.index')

@@ -96,7 +96,6 @@
             </div>
         </div>
 
-        <!-- Modal -->
         <div class="modal fade" id="createTrainingModal" tabindex="-1" role="dialog"
              aria-labelledby="createTrainingModalLabel" aria-hidden="true"
              data-backdrop="static" data-keyboard="false">
@@ -155,7 +154,6 @@
             </div>
         </div>
 
-        <!-- Edit Modal -->
         <div class="modal fade" id="editModal" tabindex="-1" role="dialog"
              aria-labelledby="editModalLabel" aria-hidden="true"
              data-backdrop="static" data-keyboard="false">
@@ -209,7 +207,6 @@
             </div>
         </div>
 
-        <!-- Enroll Student Modal -->
         <div class="modal fade" id="enrollStudentModal" tabindex="-1" role="dialog"
              aria-labelledby="enrollStudentModalLabel" aria-hidden="true"
              data-backdrop="static" data-keyboard="false">
