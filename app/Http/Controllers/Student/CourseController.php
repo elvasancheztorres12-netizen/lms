@@ -42,7 +42,6 @@ class CourseController extends Controller
         return view('student.courses.show', compact('training', 'attempts'));
     }
 
-    // MÉTODO ACTUALIZADO: Maneja la subida física de archivos (.pdf, .docx, .xlsx, etc.)
     public function submitTask(Request $request, $taskId)
     {
         $request->validate([
@@ -52,13 +51,9 @@ class CourseController extends Controller
         if ($request->hasFile('task_file')) {
             $file = $request->file('task_file');
             
-            // Genera un nombre único y limpio para el archivo
             $fileName = 'submission_' . auth()->id() . '_' . time() . '.' . $file->getClientOriginalExtension();
-            
-            // Lo guarda en storage/app/public/submissions (Debes ejecutar php artisan storage:link)
             $filePath = $file->storeAs('submissions', $fileName, 'public');
 
-            // Crear el registro apuntando a la ruta física del archivo
             TaskSubmission::create([
                 'task_id'      => $taskId,
                 'student_id'   => auth()->id(),
@@ -151,8 +146,10 @@ class CourseController extends Controller
         $elapsedSeconds = Carbon::now()->diffInSeconds($attempt->created_at);
         $maxSeconds = ($timeLimit * 60) + 120;
 
+        // CORRECCIÓN CRÍTICA: Se añade el return explícito para que no calcule puntajes abajo si expiró el tiempo
         if ($elapsedSeconds > $maxSeconds) {
             $attempt->score = 0;
+            $attempt->touch(); // Fuerza el cambio de updated_at para cerrar el intento
             $attempt->save();
             $attempt->load('assessment');
 
@@ -175,20 +172,25 @@ class CourseController extends Controller
         }
 
         $attempt->score = $totalScore;
+        $attempt->touch(); // Marcamos modificación para romper la igualdad created_at == updated_at
         $attempt->save();
         $attempt->load('assessment');
 
         return view('student.assessments.result', compact('attempt'));
     }
 
+    // CORRECCIÓN: Parseo seguro usando Carbon de forma directa y limpia
     private function validateAssessmentAvailability(Assessment $assessment)
     {
         if (! $assessment->active) {
             abort(403, 'Esta evaluación no está disponible.');
         }
 
-        $today = Carbon::now()->toDateString();
-        if ($today < $assessment->start_date || $today > $assessment->end_date) {
+        $now = Carbon::now();
+        $startDate = Carbon::parse($assessment->start_date)->startOfDay();
+        $endDate = Carbon::parse($assessment->end_date)->endOfDay();
+
+        if ($now->lt($startDate) || $now->gt($endDate)) {
             abort(403, 'Esta evaluación está fuera de las fechas permitidas.');
         }
     }

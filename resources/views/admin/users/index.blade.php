@@ -4,13 +4,11 @@
     <div class="container-fluid px-4 py-1">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 mb-4 text-gray-800">Usuarios</h1>
-            {{-- HABILITADO: Botón para abrir el Modal de Creación --}}
             <button class="btn btn-primary" data-toggle="modal" data-target="#createUserModal">
                 <i class="fas fa-user-plus me-1"></i> + Crear usuario
             </button>
         </div>
 
-        {{-- Alertas de Éxito o Errores de Validación --}}
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -57,7 +55,9 @@
                             <select name="role" class="form-select">
                                 <option value="">Todos</option>
                                 @foreach($roles as $role)
-                                    <option value="{{ $role->name }}" {{ request('role') == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
+                                    @if($role->name !== 'Student') {{-- Ocultamos Student de los filtros administrativos --}}
+                                        <option value="{{ $role->name }}" {{ request('role') == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -87,7 +87,6 @@
                     });
                 @endphp
 
-                {{-- SECCIÓN DE ACORDEONES (Solo Admin y Teacher) --}}
                 <div class="accordion" id="usersAccordion">
                     @foreach($usersByRole as $roleName => $roleUsers)
                         @if($roleName === 'Administrator' || $roleName === 'Teacher')
@@ -128,7 +127,6 @@
                                                                 <span class="badge {{ $roleName == 'Administrator' ? 'bg-danger' : 'bg-warning text-dark' }}">{{ $roleName }}</span>
                                                             </td>
                                                             <td class="align-middle text-end pe-3">
-                                                                {{-- DISPARADOR: Botón Editar cargando los atributos "data-" --}}
                                                                 <button class="btn btn-sm btn-info text-white btn-edit-user" 
                                                                     data-toggle="modal" 
                                                                     data-target="#editUserModal"
@@ -164,9 +162,7 @@
         </div>
     </div>
 
-    {{-- ========================================== --}}
-    {{-- MODAL CREAR USUARIO                        --}}
-    {{-- ========================================== --}}
+    {{-- MODAL DE CREACIÓN --}}
     <div class="modal fade" id="createUserModal" tabindex="-1" role="dialog" aria-labelledby="createUserModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <form action="{{ route('admin.users.store') }}" method="POST" class="modal-content">
@@ -180,22 +176,24 @@
                 <div class="modal-body row">
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Nombres *</label>
-                        <input type="text" name="first_names" class="form-control form-control-sm" required>
+                        <input type="text" name="first_names" class="form-control form-control-sm" maxlength="20" required>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Apellidos *</label>
-                        <input type="text" name="last_names" class="form-control form-control-sm" required>
+                        <input type="text" name="last_names" class="form-control form-control-sm" maxlength="20" required>
                     </div>
                     <div class="col-md-4 mb-2">
                         <label class="form-label small">Tipo Doc.</label>
-                        <select name="document_type" class="form-select form-select-sm">
+                        <select name="document_type" id="create_document_type" class="form-select form-select-sm">
                             <option value="DNI">DNI</option>
                             <option value="CE">C.E.</option>
                         </select>
                     </div>
                     <div class="col-md-4 mb-2">
-                        <label class="form-label small">Num. Documento</label>
-                        <input type="text" name="document_number" class="form-control form-control-sm">
+                        <label class="form-label small fw-bold">Num. Documento *</label>
+                        <input type="text" name="document_number" id="create_document_number" 
+                               class="form-control form-control-sm" maxlength="8" minlength="8" pattern="\d{8}"
+                               inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                     </div>
                     <div class="col-md-4 mb-2">
                         <label class="form-label small">Género</label>
@@ -207,7 +205,7 @@
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Email *</label>
-                        <input type="email" name="email" class="form-control form-control-sm" required>
+                        <input type="email" name="email" class="form-control form-control-sm" maxlength="150" required>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small">Teléfono</label>
@@ -226,12 +224,13 @@
                         <select name="role_id" id="create_role_id" class="form-select form-select-sm role-selector" required>
                             <option value="">Seleccione un rol</option>
                             @foreach($roles as $role)
+                                @if($role->name !== 'Student') {{-- MEJORA: El admin no crea estudiantes desde aquí --}}
                                     <option value="{{ $role->role_id }}" data-name="{{ $role->name }}">{{ $role->name }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
 
-                    {{-- CONTENEDOR DINÁMICO DE ESPECIALIDADES PARA CREAR --}}
                     <div class="col-md-12 my-2 d-none specialties-container">
                         <div class="card bg-light border p-3">
                             <h6 class="fw-bold mb-2 text-primary small"><i class="fas fa-tags"></i> Seleccionar Especialidades del Profesor</h6>
@@ -252,7 +251,7 @@
 
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Usuario *</label>
-                        <input type="text" name="username" class="form-control form-control-sm" required>
+                        <input type="text" name="username" class="form-control form-control-sm" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')" required>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small">Estado</label>
@@ -263,11 +262,11 @@
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Contraseña *</label>
-                        <input type="password" name="password" class="form-control form-control-sm" required>
+                        <input type="password" name="password" class="form-control form-control-sm" minlength="6" required>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Confirmar Contraseña *</label>
-                        <input type="password" name="password_confirmation" class="form-control form-control-sm" required>
+                        <input type="password" name="password_confirmation" class="form-control form-control-sm" minlength="6" required>
                     </div>
                 </div>
                 <div class="modal-footer bg-light">
@@ -278,9 +277,7 @@
         </div>
     </div>
 
-    {{-- ========================================== --}}
-    {{-- MODAL EDITAR USUARIO                        --}}
-    {{-- ========================================== --}}
+    {{-- MODAL DE EDICIÓN --}}
     <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <form id="editUserForm" method="POST" class="modal-content">
@@ -295,11 +292,11 @@
                 <div class="modal-body row">
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Nombres *</label>
-                        <input type="text" name="first_names" id="edit_first_names" class="form-control form-control-sm" required>
+                        <input type="text" name="first_names" id="edit_first_names" class="form-control form-control-sm" maxlength="20" required>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Apellidos *</label>
-                        <input type="text" name="last_names" id="edit_last_names" class="form-control form-control-sm" required>
+                        <input type="text" name="last_names" id="edit_last_names" class="form-control form-control-sm" maxlength="20" required>
                     </div>
                     <div class="col-md-4 mb-2">
                         <label class="form-label small">Tipo Doc.</label>
@@ -309,8 +306,10 @@
                         </select>
                     </div>
                     <div class="col-md-4 mb-2">
-                        <label class="form-label small">Num. Documento</label>
-                        <input type="text" name="document_number" id="edit_document_number" class="form-control form-control-sm">
+                        <label class="form-label small fw-bold">Num. Documento *</label>
+                        <input type="text" name="document_number" id="edit_document_number" 
+                               class="form-control form-control-sm" maxlength="8" minlength="8" pattern="\d{8}"
+                               inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                     </div>
                     <div class="col-md-4 mb-2">
                         <label class="form-label small">Género</label>
@@ -322,7 +321,7 @@
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Email *</label>
-                        <input type="email" name="email" id="edit_email" class="form-control form-control-sm" required>
+                        <input type="email" name="email" id="edit_email" class="form-control form-control-sm" maxlength="150" required>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small">Teléfono</label>
@@ -347,7 +346,6 @@
                         </select>
                     </div>
 
-                    {{-- CONTENEDOR DINÁMICO DE ESPECIALIDADES PARA EDITAR --}}
                     <div class="col-md-12 my-2 d-none specialties-container">
                         <div class="card bg-light border p-3">
                             <h6 class="fw-bold mb-2 text-info small"><i class="fas fa-tags"></i> Modificar Especialidades del Profesor</h6>
@@ -368,7 +366,7 @@
 
                     <div class="col-md-6 mb-2">
                         <label class="form-label small fw-bold">Usuario *</label>
-                        <input type="text" name="username" id="edit_username" class="form-control form-control-sm" required>
+                        <input type="text" name="username" id="edit_username" class="form-control form-control-sm" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')" required>
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small">Estado</label>
@@ -379,11 +377,11 @@
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small">Nueva Contraseña (Opcional)</label>
-                        <input type="password" name="password" class="form-control form-control-sm" placeholder="Dejar en blanco para mantener">
+                        <input type="password" name="password" class="form-control form-control-sm" minlength="6" placeholder="Dejar en blanco para mantener">
                     </div>
                     <div class="col-md-6 mb-2">
                         <label class="form-label small">Confirmar Nueva Contraseña</label>
-                        <input type="password" name="password_confirmation" class="form-control form-control-sm" placeholder="Dejar en blanco para mantener">
+                        <input type="password" name="password_confirmation" class="form-control form-control-sm" minlength="6" placeholder="Dejar en blanco para mantener">
                     </div>
                 </div>
                 <div class="modal-footer bg-light">
@@ -394,11 +392,31 @@
         </div>
     </div>
 
-    {{-- LÓGICA DE JAVASCRIPT DINÁMICO --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
-            // Función encargada de ocultar/mostrar las especialidades basándose en el rol
+            // Lógica para cambiar dinámicamente las restricciones según el Tipo de Documento elegido
+            function setupDocumentValidation(docTypeSelect, docNumberInput) {
+                if(docTypeSelect.value === 'DNI') {
+                    docNumberInput.setAttribute('maxlength', '8');
+                    docNumberInput.setAttribute('minlength', '8');
+                    docNumberInput.setAttribute('pattern', '\\d{8}');
+                } else {
+                    docNumberInput.setAttribute('maxlength', '20');
+                    docNumberInput.removeAttribute('minlength');
+                    docNumberInput.removeAttribute('pattern');
+                }
+            }
+
+            // Listeners para el tipo de documento en creación y edición
+            const createDocType = document.getElementById('create_document_type');
+            const createDocNum = document.getElementById('create_document_number');
+            createDocType.addEventListener('change', () => setupDocumentValidation(createDocType, createDocNum));
+
+            const editDocType = document.getElementById('edit_document_type');
+            const editDocNum = document.getElementById('edit_document_number');
+            editDocType.addEventListener('change', () => setupDocumentValidation(editDocType, editDocNum));
+
             function toggleSpecialties(selectElement) {
                 const selectedOption = selectElement.options[selectElement.selectedIndex];
                 const roleName = selectedOption ? selectedOption.getAttribute('data-name') : '';
@@ -409,27 +427,22 @@
                     container.classList.remove('d-none');
                 } else {
                     container.classList.add('d-none');
-                    // Limpiamos los checkboxes si se desmarca para evitar envíos residuales
                     container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
                 }
             }
 
-            // Listeners para los Select de Roles en tiempo real
             document.querySelectorAll('.role-selector').forEach(select => {
                 select.addEventListener('change', function() {
                     toggleSpecialties(this);
                 });
             });
 
-            // Lógica para capturar y rellenar los datos en el Modal de Edición
             document.querySelectorAll('.btn-edit-user').forEach(button => {
                 button.addEventListener('click', function () {
                     const id = this.getAttribute('data-id');
                     
-                    // Seteamos la ruta dinámica del Formulario
                     document.getElementById('editUserForm').action = `/admin/users/${id}`;
 
-                    // Rellenamos los campos básicos de texto y selects
                     document.getElementById('edit_first_names').value = this.getAttribute('data-first_names');
                     document.getElementById('edit_last_names').value = this.getAttribute('data-last_names');
                     document.getElementById('edit_document_type').value = this.getAttribute('data-document_type') || 'DNI';
@@ -445,17 +458,16 @@
                     const roleSelect = document.getElementById('edit_role_id');
                     roleSelect.value = this.getAttribute('data-role_id');
 
-                    // Desmarcamos todos los checkboxes antes de pintar los del usuario actual
                     document.querySelectorAll('.edit-spec-checkbox').forEach(cb => cb.checked = false);
 
-                    // Evaluamos y marcamos las especialidades asignadas en la BD
                     const assignedSpecialties = JSON.parse(this.getAttribute('data-specialties') || '[]');
                     assignedSpecialties.forEach(specId => {
                         const checkbox = document.getElementById(`edit_spec_${specId}`);
                         if (checkbox) checkbox.checked = true;
                     });
 
-                    // Forzamos la ejecución para evaluar si se deben mostrar las especialidades de inmediato
+                    // Forzar la validación de DNI/CE al abrir el modal de edición
+                    setupDocumentValidation(editDocType, editDocNum);
                     toggleSpecialties(roleSelect);
                 });
             });

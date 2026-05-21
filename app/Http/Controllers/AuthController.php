@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\People;
+use Illuminate\Support\Facades\DB;
+use App\Models\Person;
 use App\Models\Role;
 use App\Models\User;
 
@@ -23,49 +24,66 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        // 1. Modificamos las reglas para los nuevos campos del formulario
         $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:people,email',
+            'first_names' => 'required|string|max:20',
+            'last_names' => 'required|string|max:20',
+            'document_number' => 'required|string|max:20',
+            'email' => 'required|email|max:150',
+            'username' => 'required|string|max:50|unique:users,username',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        $fullName = trim($request->full_name);
-        $nameParts = preg_split('/\s+/', $fullName);
-        $lastName = count($nameParts) > 1 ? array_pop($nameParts) : '';
-        $firstName = implode(' ', $nameParts);
+        // 2. Filtro de Entrada: Verificamos si la persona ya existe por DNI y Correo (Pre-matrícula)
+        $person = Person::where('document_number', $request->document_number)
+                        ->where('email', $request->email)
+                        ->first();
 
-        // Transacción para asegurar la integridad de datos
-        \Illuminate\Support\Facades\DB::beginTransaction();
+        if (!$person) {
+            return back()->withInput()->with('error', 'No se encontró ninguna matrícula activa con el DNI y correo ingresados. Por favor, regularice su pago.');
+        }
+
+        // 3. Verificamos que esa persona no tenga ya una cuenta creada para evitar duplicados
+        $userExists = User::where('person_id', $person->person_id)->exists();
+
+        if ($userExists) {
+            return back()->withInput()->with('error', 'Este documento ya cuenta con un usuario activo en el sistema. Intente iniciar sesión.');
+        }
+
+        // 4. Procesamos el registro seguro con el Try-Catch y Transacción que ya tenías
+        DB::beginTransaction();
 
         try {
-            $person = People::create([
-                'first_names' => $firstName,
-                'last_names' => $lastName,
-                'email' => $request->email,
+            // Actualizamos nombres por si acaso hubo un cambio en el registro físico/formulario
+            $person->update([
+                'first_names' => trim($request->first_names),
+                'last_names' => trim($request->last_names),
             ]);
 
+            // Creamos las credenciales del alumno utilizando su nuevo 'username'
             $user = User::create([
                 'person_id' => $person->person_id,
-                'username' => $request->email,
-                'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+                'username' => $request->username,
+                'password' => Hash::make($request->password),
                 'status' => 'A',
             ]);
 
+            // Asignación segura del rol Student
             $studentRole = Role::where('name', 'Student')->first();
             if (!$studentRole) {
                 throw new \Exception('El rol "Student" no está configurado en el sistema. Contacte al administrador.');
             }
             $user->roles()->attach($studentRole->role_id);
 
-            \Illuminate\Support\Facades\DB::commit();
+            DB::commit();
 
             return redirect()->route('login')
                 ->with('success', '¡Registro completado con éxito! Ahora puedes iniciar sesión.');
 
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\DB::rollBack();
+            DB::rollBack();
             return back()->withInput()->withErrors([
-                'email' => 'Ocurrió un error al procesar el registro. Inténtelo de nuevo.'
+                'email' => 'Ocurrió un error al procesar el registro: ' . $e->getMessage()
             ]);
         }
     }

@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-fluid px-4 py-1">
         <div class="mb-4">
-            <h1 class="h3 mb-2 text-gray-800 fw-bold">Mis Capacitaciones</h1>
+            <h1 class="h3 mb-2 text-gray-800 fw-bold">Mis Cursos</h1>
             <p class="text-muted small">Accede a tus cursos y gestiona tus estudiantes</p>
         </div>
 
