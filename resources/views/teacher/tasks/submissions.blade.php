@@ -48,7 +48,11 @@
                     @forelse($submissions as $submission)
                         <tr style="border-bottom: 1px solid #edf2f7;">
                             <td style="padding: 15px 20px; font-weight: 500; color: #111827;">
-                                {{ $submission->student->name ?? 'Estudiante' }}
+                                @if($submission->student && $submission->student->person)
+                                    {{ $submission->student->person->first_names }} {{ $submission->student->person->last_names }}
+                                @else
+                                    {{ $submission->student->name ?? 'Estudiante sin nombre' }}
+                                @endif
                             </td>
                             <td style="padding: 15px 20px; color: #6b7280;">
                                 {{ $submission->created_at ? $submission->created_at->format('d/m/Y H:i') : '-' }}

@@ -15,7 +15,6 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validar la petición utilizando 'delivery_date' que es el nombre que viene del HTML
         $request->validate([
             'training_id'   => 'required|exists:trainings,training_id',
             'title'         => 'required|string|max:150',
@@ -25,12 +24,10 @@ class TaskController extends Controller
 
         $user = auth()->user();
 
-        // 2. Verificar que el curso pertenece al profesor logueado
         $training = Training::where('training_id', $request->training_id)
             ->where('teacher_id', $user->user_id)
             ->firstOrFail();
 
-        // 3. Crear el registro de la tarea mapeando 'due_date' con 'delivery_date'
         Task::create([
             'training_id' => $training->training_id,
             'title'       => $request->title,
@@ -38,7 +35,6 @@ class TaskController extends Controller
             'due_date'    => $request->delivery_date, // Guardamos el valor en el campo de la BD
         ]);
 
-        // Redireccionar a la pestaña de contenido del curso con mensaje de éxito
         return redirect()->route('teacher.courses.show', ['id' => $training->training_id, 'tab' => 'contenido'])
             ->with('success', 'Tarea asignada correctamente.');
     }
@@ -50,14 +46,14 @@ class TaskController extends Controller
     {
         $user = auth()->user();
 
-        // Buscamos la tarea asegurándonos de que pertenezca a un curso del profesor logueado
         $task = Task::where('task_id', $task_id)
             ->whereHas('training', function ($query) use ($user) {
                 $query->where('teacher_id', $user->user_id);
             })->firstOrFail();
 
-        // Cargamos las entregas junto con los datos del estudiante
-        $submissions = $task->submissions()->with('student')->get();
+        $submissions = $task->submissions()
+            ->with(['student.person']) 
+            ->get();
 
         return view('teacher.tasks.submissions', compact('task', 'submissions'));
     }
@@ -74,17 +70,15 @@ class TaskController extends Controller
 
         $user = auth()->user();
 
-        // Buscamos la entrega asegurando que pertenezca a una tarea del profesor logueado
         $submission = TaskSubmission::where('submission_id', $submission_id)
             ->whereHas('task.training', function ($query) use ($user) {
                 $query->where('teacher_id', $user->user_id);
             })->firstOrFail();
 
-        // Actualizamos los campos de la calificación
         $submission->update([
-            'grade'     => $request->grade,
-            'feedback'  => $request->feedback,
-            'graded_at' => now(),
+            'grade'            => $request->grade,
+            'teacher_feedback' => $request->feedback,
+            'graded_at'        => now(),
         ]);
 
         return redirect()->route('teacher.tasks.submissions', ['task_id' => $submission->task_id])
